@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import ContactDetails from './ContactDetails';
 import ContactInfo from './ContactInfo'
+import ContactCreate from './ContactCreate';
+
+import update from 'react-addons-update';
 
 class Contact extends Component {
 
@@ -26,6 +29,9 @@ class Contact extends Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.handleCreate = this.handleCreate.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
+    this.handleEdit = this.handleEdit.bind(this)
   }
 
   handleChange(e) {
@@ -39,6 +45,33 @@ class Contact extends Component {
       selectedKey: key
     })
     console.log(key, 'is selected')
+  }
+
+  handleCreate(contact) {
+    this.setState({
+      contactData: update(this.state.contactData,
+        { $push: [contact] })
+    })
+  }
+
+  handleRemove() {
+    this.setState({
+      contactData: update(this.state.contactData, {
+        $splice: [[this.state.selectedKey, 1]]
+      }),
+      selectedKey: -1
+    })
+  }
+
+  handleEdit(name, phone) {
+    this.setState({
+      contactData: update(this.state.contactData, {
+        [this.state.selectedKey]: {
+          name: { $set: name },
+          phone: { $set: phone }
+        }
+      })
+    })
   }
 
   render() {
@@ -72,6 +105,9 @@ class Contact extends Component {
         <ContactDetails
           isSelected={this.state.selectedKey != -1}
           contact={this.state.contactData[this.state.selectedKey]}
+        />
+        <ContactCreate
+          onCreate={this.handleCreate}
         />
       </div>
     );
