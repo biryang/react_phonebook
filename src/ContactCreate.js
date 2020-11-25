@@ -10,6 +10,7 @@ class ContactCreate extends Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   handleChange(e) {
@@ -31,6 +32,16 @@ class ContactCreate extends Component {
       name: '',
       phone: ''
     })
+    this.nameInput.focus()
+  }
+
+  handleKeyPress(e) {
+    //Enter 확인 이벤트
+    if (e.charCode === 13) {
+      this.handleClick()
+    }
+    //ref를 통해 포커스
+    console.log(e.charCode)
   }
 
   render() {
@@ -44,6 +55,7 @@ class ContactCreate extends Component {
             placeholder="name"
             value={this.state.name}
             onChange={this.handleChange}
+            ref={(ref) => { this.nameInput = ref }}
           />
           <input
             type="text"
@@ -51,6 +63,7 @@ class ContactCreate extends Component {
             placeholder="phone"
             value={this.state.phone}
             onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
           />
         </p>
         <button onClick={this.handleClick}>Create</button>
